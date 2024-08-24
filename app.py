@@ -5,10 +5,6 @@ import logging
 import uuid
 import httpx
 import asyncio
-import spacy
-from spacy.matcher import PhraseMatcher
-
-
 from quart import (
     Blueprint,
     Quart,
@@ -326,43 +322,14 @@ async def promptflow_request(request):
     except Exception as e:
         logging.error(f"An error occurred while making promptflow_request: {e}")
 
-# Load the spacy model and create a matcher for synonyms
-nlp = spacy.load("en_core_web_sm")
-matcher = PhraseMatcher(nlp.vocab)
-synonyms = ["home visits", "house-to-house visits"]
-patterns = [nlp(text) for text in synonyms]
-matcher.add("VISIT_PATTERN", patterns)
-
-important_terms = ["cost-effectiveness", "intersectionality", "mapping champions"]
-
-def process_input(user_input):
-    doc = nlp(user_input)
-    matches = matcher(doc)
-    for match_id, start, end in matches:
-        span = doc[start:end]
-        user_input = user_input.replace(span.text, "house-to-house visits")
-    return user_input
-
-def check_keywords(user_input):
-    for term in important_terms:
-        if term in user_input:
-            return True
-    return False
 
 async def send_chat_request(request_body, request_headers):
     filtered_messages = []
     messages = request_body.get("messages", [])
-    
     for message in messages:
         if message.get("role") != 'tool':
-            if message.get("role") == "user":
-                # Process the user input to handle synonyms and keywords
-                message["content"] = process_input(message["content"])
-                if check_keywords(message["content"]):
-                    # Handle keyword-specific logic if necessary
-                    pass
             filtered_messages.append(message)
-    
+            
     request_body['messages'] = filtered_messages
     model_args = prepare_model_args(request_body, request_headers)
 
@@ -377,10 +344,6 @@ async def send_chat_request(request_body, request_headers):
 
     return response, apim_request_id
 
-def filter_response(response_content, topic):
-    if topic.lower() in response_content.lower():
-        return response_content
-    return "No relevant information found."
 
 async def complete_chat_request(request_body, request_headers):
     if app_settings.base_settings.use_promptflow:
@@ -394,17 +357,9 @@ async def complete_chat_request(request_body, request_headers):
         )
     else:
         response, apim_request_id = await send_chat_request(request_body, request_headers)
-        # Apply filtering based on user-specified topic
-        topic = request_body.get("topic", "")
-        filtered_response = filter_response(response["choices"][0]["message"]["content"], topic)
-        response["choices"][0]["message"]["content"] = filtered_response
-        
-        # Add qualifier to reduce overgeneralization
-        if "highlights" in response["choices"][0]["message"]["content"]:
-            response["choices"][0]["message"]["content"] = response["choices"][0]["message"]["content"].replace("highlights", "suggests")
-        
         history_metadata = request_body.get("history_metadata", {})
         return format_non_streaming_response(response, history_metadata, apim_request_id)
+
 
 async def stream_chat_request(request_body, request_headers):
     response, apim_request_id = await send_chat_request(request_body, request_headers)
@@ -442,16 +397,9 @@ async def conversation():
     if not request.is_json:
         return jsonify({"error": "request must be json"}), 415
     request_json = await request.get_json()
-    
-    response = await conversation_internal(request_json, request.headers)
 
-    # After sending the response, request feedback
-    user_feedback = request_json.get('feedback', None)
-    if user_feedback and user_feedback.lower() == "no":
-        # Log or handle the issue accordingly
-        logging.debug("User indicated the response was not helpful.")
-    
-    return response
+    return await conversation_internal(request_json, request.headers)
+
 
 @bp.route("/frontend_settings", methods=["GET"])
 def get_frontend_settings():
@@ -517,21 +465,6 @@ async def add_conversation():
     except Exception as e:
         logging.exception("Exception in /history/generate")
         return jsonify({"error": str(e)}), 500
-
-def decompose_query(query):
-    subqueries = query.split('and')
-    return subqueries
-
-@bp.route("/complex_query", methods=["POST"])
-async def handle_complex_query():
-    request_json = await request.get_json()
-    user_input = request_json.get('user_input', '')
-    subqueries = decompose_query(user_input)  # Break down the query
-    responses = []
-    for subquery in subqueries:
-        response, _ = await send_chat_request({"messages": [{"role": "user", "content": subquery}]}, request.headers)
-        responses.append(response["choices"][0]["message"]["content"])
-    return jsonify({"responses": responses})
 
 
 @bp.route("/history/update", methods=["POST"])
