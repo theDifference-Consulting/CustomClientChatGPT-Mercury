@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: clientgpt.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3554df6cd93245b6957a554156889c2d }}/clientgpt:${{ github.sha }}
+        tags: clientgpt.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3554df6cd93245b6957a554156889c2d | tolower }}/clientgpt:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
