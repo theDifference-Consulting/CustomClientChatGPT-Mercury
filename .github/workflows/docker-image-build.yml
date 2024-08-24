@@ -8,12 +8,15 @@ on:
 jobs:
 
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Log in to Azure Container Registry
+      run: |
+        docker login -u github -p ${{ secrets.ACR_PASSWORD }} clientgpt.azurecr.io
+
     - name: Build the Docker image
-      run:         
+      run: |
         docker build . --file WebApp.Dockerfile --tag clientgpt.azurecr.io/internalclientgpt:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER
-      
