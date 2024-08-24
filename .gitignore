@@ -5,3 +5,8 @@ frontend/node_modules
 .azure/
 __pycache__/
 .ipynb_checkpoints/
+/.github/workflows
+.github/.DS_Store
+.DS_Store
+.github/workflows/.DS_Store
+app.updated.bak
