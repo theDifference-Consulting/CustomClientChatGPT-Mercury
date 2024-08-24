@@ -42,7 +42,7 @@ const Layout = () => {
 
   useEffect(() => {
     if (!appStateContext?.state.isLoading) {
-      setLogo(ui?.logo || )
+      setLogo(ui?.logo || '')
     }
   }, [appStateContext?.state.isLoading])
 
