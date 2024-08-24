@@ -15,11 +15,8 @@ jobs:
     steps:
     
     - name: Azure Container Registry Login
-      uses: Azure/docker-login@v2
-      with:
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
-        login-server: clientgpt.azurecr.io
+      run: |
+        docker login -u github -p ${{ secrets.ACR_PASSWORD }} clientgpt.azurecr.io
 
     - uses: actions/checkout@v3
 
