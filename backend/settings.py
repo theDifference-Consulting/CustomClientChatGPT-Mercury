@@ -41,11 +41,11 @@ class _UiSettings(BaseSettings):
         env_ignore_empty=True
     )
 
-    title: str = "Contoso"
+    title: str = ""
     logo: Optional[str] = None
     chat_logo: Optional[str] = None
-    chat_title: str = "Start chatting"
-    chat_description: str = "This chatbot is configured to answer your questions"
+    chat_title: str = "Welcome to the learning assistant!"
+    chat_description: str = "Here are some questions to get you started: What are the key strategies used to identify zero-dose children in rural areas? How do the methods for identifying zero-dose children differ between urban and rural settings? What is the most cost-effective approach to reaching zero-dose children?"
     favicon: str = "/favicon.ico"
     show_share_button: bool = True
     show_chat_history_button: bool = True
