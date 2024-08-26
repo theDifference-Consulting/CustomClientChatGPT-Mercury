@@ -741,6 +741,13 @@ const Chat = () => {
     )
   }
 
+  const handleQuestionClick = (question: string) => {
+    // This function will simulate the user typing the question
+    if (question && !isLoading) {
+      makeApiRequestWithoutCosmosDB(question);
+    }
+  };
+
   return (
     <div className={styles.container} role="main">
       {showAuthMessage ? (
@@ -777,11 +784,9 @@ const Chat = () => {
               <>
                 <Stack className={styles.chatEmptyState}>
                   <img src={logo} className={styles.chatIcon} aria-hidden="true" />
-                  <h1 className={styles.chatEmptyStateTitle}>{ui?.chat_title}</h1>
-                  <h2 className={styles.chatEmptyStateSubtitle}>{ui?.chat_description}</h2>
                 </Stack>
-                {/* Add the MiddleSection here */}
-                <MiddleSection />
+                {/* Pass the handler to MiddleSection */}
+                <MiddleSection onQuestionClick={handleQuestionClick} />
               </>
             ) : (
               <div className={styles.chatMessageStream} style={{ marginBottom: isLoading ? '40px' : '0px' }} role="log">
@@ -1027,5 +1032,6 @@ const Chat = () => {
     </div>
   )
 }
+
 
 export default Chat
