@@ -23,7 +23,7 @@ jobs:
     - name: Build and Push Docker image
       run: |
         set -e
-        docker build . --file WebApp.Dockerfile --tag clientgpt.azurecr.io/internalclientgpt:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER;
-        docker tag clientgpt.azurecr.io/internalclientgpt:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER clientgpt.azurecr.io/internalclientgpt:latest;
-        docker push clientgpt.azurecr.io/internalclientgpt:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER;
-        docker push clientgpt.azurecr.io/internalclientgpt:latest;
+        docker build . --file WebApp.Dockerfile --tag clientgpt.azurecr.io/internalclientgptmercury:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER;
+        docker tag clientgpt.azurecr.io/internalclientgptmercury:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER clientgpt.azurecr.io/internalclientgptmercury:latest;
+        docker push clientgpt.azurecr.io/internalclientgptmercury:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER;
+        docker push clientgpt.azurecr.io/internalclientgptmercury:latest;

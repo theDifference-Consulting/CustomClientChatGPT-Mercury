@@ -19,4 +19,4 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        docker build . --file WebApp.Dockerfile --tag clientgpt.azurecr.io/internalclientgpt:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER
+        docker build . --file WebApp.Dockerfile --tag clientgpt.azurecr.io/internalclientgptmercury:$(date +'%Y-%m-%d')_$GITHUB_RUN_NUMBER
