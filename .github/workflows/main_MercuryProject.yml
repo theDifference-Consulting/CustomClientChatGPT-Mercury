@@ -29,7 +29,7 @@ jobs:
     - name: Build and push container image to registry
       run: |
         IMAGE_TAG=clientgpt.azurecr.io/${{ env.ACR_USERNAME }}/internalclientgpt-mercury:${{ github.sha }}
-        docker buildx build --file ../../WebApp.Dockerfile --tag $IMAGE_TAG --push .
+        docker buildx build --file ./WebApp.Dockerfile --tag $IMAGE_TAG --push .
 
   deploy:
     runs-on: ubuntu-latest
