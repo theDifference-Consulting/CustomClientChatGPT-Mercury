@@ -4,7 +4,6 @@ import styles from './MiddleSection.module.css';
 const MiddleSection = ({ onQuestionClick }: { onQuestionClick: (question: string) => void }) => {
   const questions = [
     "What types of questions can I ask you?",
-    "What research methods were used?", 
     "Give me a glossary of frequently used terms.",
     "Summarize some key findings of the project."
   ];
