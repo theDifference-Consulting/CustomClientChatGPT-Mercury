@@ -216,25 +216,18 @@ const Chat = () => {
         const reader = response.body.getReader()
 
         let runningText = ''
-        let accumulatedText = ''
-
         while (true) {
           setProcessMessages(messageStatus.Processing)
           const { done, value } = await reader.read()
           if (done) break
 
           var text = new TextDecoder('utf-8').decode(value)
-          console.log('Received chunk: ', text)
-          accumulatedText += text
-          const objects = accumulatedText.split('\n')
-
-          for (let obj of objects) {
+          const objects = text.split('\n')
+          objects.forEach(obj => {
             try {
               if (obj !== '' && obj !== '{}') {
                 runningText += obj
-                result = JSON.parse(runningText) // This might throw an error if JSON is incomplete
-                // Reset runningText after successful parsing
-                runningText = ''
+                result = JSON.parse(runningText)
                 if (result.choices?.length > 0) {
                   result.choices[0].messages.forEach(msg => {
                     msg.id = result.id
@@ -249,6 +242,7 @@ const Chat = () => {
                 } else if (result.error) {
                   throw Error(result.error)
                 }
+                runningText = ''
               }
             } catch (e) {
               if (!(e instanceof SyntaxError)) {
