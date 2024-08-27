@@ -258,7 +258,7 @@ const Chat = () => {
                 console.log('Incomplete message. Continuing...')
               }
             }
-          })
+          }
         }
         conversation.messages.push(toolMessage, assistantMessage)
         appStateContext?.dispatch({ type: 'UPDATE_CURRENT_CHAT', payload: conversation })
@@ -1038,6 +1038,5 @@ const Chat = () => {
     </div>
   )
 }
-
 
 export default Chat
