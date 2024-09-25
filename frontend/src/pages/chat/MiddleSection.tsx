@@ -10,7 +10,7 @@ const MiddleSection = ({ onQuestionClick }: { onQuestionClick: (question: string
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Welcome to the learning assistant!</h1>
+      <h1 className={styles.title}>Welcome to Claros!</h1>
       <p className={styles.subtitle}>Here are some questions to get you started:</p>
       <div className={styles.buttonGroup}>
         {questions.map((question, index) => (
